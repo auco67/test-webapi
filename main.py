@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import gspread
 from google.oauth2.service_account import Credentials
 from gspread.client import Client
+import pandas as pd
 
 def init():
     # .envファイルの内容を環境変数に読み込む
@@ -35,7 +36,9 @@ def get_auth(credential_key:str) -> Client:
 def read_spread(gs_credential:Client, spread_id:str, sheet_name:str):
     spread = gs_credential.open_by_key(spread_id)
     spread_sheet = spread.worksheet(sheet_name)
-    print(spread_sheet.get_values())
+    datas = spread_sheet.get_all_values()
+    df = pd.DataFrame(datas[1:],columns=datas[0])
+    print(df)
 
 def main():
     setting = init()
